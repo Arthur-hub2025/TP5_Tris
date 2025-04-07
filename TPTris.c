@@ -1,18 +1,19 @@
-#include <stdio.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct {
     char nom[50];
     char code[20];
-    char fabri[11];  
-    char peremption[11];  
+    char fabri[11];
+    char peremption[11];
     float prix;
     int vente;
     int stock;
 } Medicament;
 
 int main() {
-    const int N = 80;
+    const int N = 3;
     Medicament tab[N];
 
     for (int i = 0; i < N; i++) {
@@ -73,20 +74,49 @@ int main() {
 
         if (cmp == 0) {
             trouve = 1;
-        } else if (cmp < 0) {
+        }
+        else if (cmp < 0) {
             debut = mil + 1;
-        } else {
+        }
+        else {
             fin = mil - 1;
         }
     }
 
     if (trouve) {
         printf("\n Medicament 'paracetamol' trouve a l'indice %d :\n", mil);
-        printf("Nom : %s | Code : %s | Peremption : %s | Prix : %.2f$\n", 
+        printf("Nom : %s | Code : %s | Peremption : %s | Prix : %.2f$\n",
             tab[mil].nom, tab[mil].code, tab[mil].peremption, tab[mil].prix);
-    } else {
+    }
+    else {
         printf("\n Le medicament 'paracetamol' n'est pas present dans le tableau.\n");
     }
+
+    int indice_max = 0;
+    for (int i = 1; i < N; i++) {
+        if (tab[i].prix > tab[indice_max].prix) {
+            indice_max = i;
+        }
+    }
+
+    printf("\n Medicament le plus cher :\n");
+    printf("Nom : %s | Code : %s | Prix : %.2f$ | Peremption : %s | Stock : %d\n",
+        tab[indice_max].nom, tab[indice_max].code, tab[indice_max].prix, tab[indice_max].peremption, tab[indice_max].stock);
+
+    int total_vendus = 0;
+    int total_disponibles = 0;
+
+    for (int i = 0; i < N; i++) {
+        total_vendus += tab[i].vente;
+        total_disponibles += tab[i].vente + tab[i].stock;
+    }
+
+    float taux = 0;
+    if (total_disponibles > 0) {
+        taux = ((float)total_vendus / total_disponibles) * 100;
+    }
+
+    printf("\n Taux de medicaments vendus : %.2f %%\n", taux);
 
     return 0;
 }
