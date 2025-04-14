@@ -1,66 +1,58 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 typedef struct {
-    char nom[50];
-    char code[50];
-    char fabri[50];
-    char peremption[11];
-    float prix;
-    int vente;
-    int stock;
-} Medicament;
+    char Nom[50];
+    char Prenom[50];
+    char Matricule[20];
+    float Moyenne;
+} Etudiant;
 
-void swap(Medicament* a, Medicament* b) {
-    Medicament temp = *a;
+void echanger(Etudiant* a, Etudiant* b) {
+    Etudiant temp = *a;
     *a = *b;
     *b = temp;
 }
 
-int comparer_dates(const char* date1, const char* date2) {
-    return strcmp(date1, date2);
-}
+int partition(Etudiant tab[], int bas, int haut) {
+    float pivot = tab[haut].Moyenne;
+    int i = (bas - 1);
 
-void tri_bulles(Medicament tab[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (comparer_dates(tab[j].peremption, tab[j + 1].peremption) > 0) {
-                swap(&tab[j], &tab[j + 1]);
-            }
+    for (int j = bas; j <= haut - 1; j++) {
+        if (tab[j].Moyenne > pivot) { 
+            i++;
+            echanger(&tab[i], &tab[j]);
         }
     }
+    echanger(&tab[i + 1], &tab[haut]);
+    return (i + 1);
+}
+
+void triQuicksort(Etudiant tab[], int bas, int haut) {
+    if (bas < haut) {
+        int pi = partition(tab, bas, haut);
+
+        triQuicksort(tab, bas, pi - 1);
+        triQuicksort(tab, pi + 1, haut);
+    }
+}
+
+void trierParMerite(Etudiant etudiants[], int taille) {
+    triQuicksort(etudiants, 0, taille - 1);
 }
 
 int main() {
-    const int N = 2;
+    Etudiant etudiants[100];
+    int nombreEtudiants = 100;
 
-    Medicament Tab[N];
 
-    for (int i = 0; i < N; i++) {
-        printf("Enregistrement mediament %d:\n", i + 1);
-        printf("Nom: ");
-        scanf("%49s", Tab[i].nom);
-        printf("Code: ");
-        scanf("%49s", Tab[i].code);
-        printf("Fabriquant: ");
-        scanf("%49s", Tab[i].fabri);
-        printf("Date de peremption (AAAA-MM-JJ): ");
-        scanf("%10s", Tab[i].peremption);
-        printf("Prix: ");
-        scanf("%f", &Tab[i].prix);
-        printf("Vente: ");
-        scanf("%d", &Tab[i].vente);
-        printf("Stock: ");
-        scanf("%d", &Tab[i].stock);
-        getchar();
-    }
+    trierParMerite(etudiants, nombreEtudiants);
 
-    tri_bulles(Tab, N);
-
-    printf("\nMedicaments tris par date de peremption:\n");
-    for (int i = 0; i < N; i++) {
-        printf("Nom: %s, Code: %s, Date de peremption: %s\n", Tab[i].nom, Tab[i].code, Tab[i].peremption);
+    printf("Liste des etudiants tris par merite:\n");
+    for (int i = 0; i < nombreEtudiants; i++) {
+        printf("%2d. %s %s - Matricule: %s - Moyenne: %.2f\n",
+            i + 1, etudiants[i].Prenom, etudiants[i].Nom,
+            etudiants[i].Matricule, etudiants[i].Moyenne);
     }
 
     return 0;
