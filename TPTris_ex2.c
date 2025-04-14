@@ -41,18 +41,38 @@ void trierParMerite(Etudiant etudiants[], int taille) {
     triQuicksort(etudiants, 0, taille - 1);
 }
 
-int main() {
-    Etudiant etudiants[100];
-    int nombreEtudiants = 100;
+void triInsertionAlphabetique(Etudiant T[], int taille) {
+    for (int i = 1; i < taille; i++) {
+        Etudiant x = T[i]; 
+        int j = i;
 
+        while (j > 0 && strcmp(T[j - 1].Nom, x.Nom) > 0) {
+            T[j] = T[j - 1];
+            j--;
+        }
+        T[j] = x;
+    }
+}
+
+int main() {
+    Etudiant etudiants[100] = {
+        {"Arthur", "PAILLE", "A123", 15.5},
+        {"Matthieu", "PAILLE", "A124", 16.0},
+        {"Sabine", "FORD", "M123", 14.0},
+        {"Antonin", "DUPONT", "M124", 17.5}
+    };
+    int nombreEtudiants = 4;
 
     trierParMerite(etudiants, nombreEtudiants);
-
-    printf("Liste des etudiants tris par merite:\n");
+    printf("Tri par merite\n");
     for (int i = 0; i < nombreEtudiants; i++) {
-        printf("%2d. %s %s - Matricule: %s - Moyenne: %.2f\n",
-            i + 1, etudiants[i].Prenom, etudiants[i].Nom,
-            etudiants[i].Matricule, etudiants[i].Moyenne);
+        printf("%s %s - Moyenne: %.2f\n", etudiants[i].Nom, etudiants[i].Prenom, etudiants[i].Moyenne);
+    }
+
+    triInsertionAlphabetique(etudiants, nombreEtudiants);
+    printf("\n Tri alphabetique\n");
+    for (int i = 0; i < nombreEtudiants; i++) {
+        printf("%s %s\n", etudiants[i].Nom, etudiants[i].Prenom);
     }
 
     return 0;
